@@ -6,7 +6,7 @@ export default {
       title: 'TheReservo API',
       description: 'Documentation of theReservo API',
     },
-    servers: [{ url: 'http://localhost:3306' }],
+    servers: [{ url: 'http://localhost:7700' }],
     components: {
       securitySchemes: {
         bearerAuth: {
