@@ -1,0 +1,140 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id          Int      @id @default(autoincrement())
+  login       String   @unique @db.VarChar(255)
+  password    String   @db.Char(60)
+  email       String   @unique @db.VarChar(255)
+  isConfirmed Boolean  @default(false) @map("is_confirmed")
+  fullName    String   @map("full_name") @db.VarChar(255)
+  picturePath String?  @map("picture_path") @db.VarChar(255)
+  role        UserRole @default(user)
+
+  companies     Company[]
+  comments      Comment[]
+  events        UserEvent[]
+  subscriptions SubscriptionToCompany[]
+
+  @@map("user")
+}
+
+model UserEvent {
+  userId    Int     @map("user_id")
+  eventId   Int     @map("event_id")
+  isVisible Boolean @default(true) @map("is_visible")
+
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  event Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+  @@id([userId, eventId])
+  @@map("user_event")
+}
+
+model SubscriptionToCompany {
+  userId    Int @map("user_id")
+  companyId Int @map("company_id")
+
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  @@id([userId, companyId])
+  @@map("subscription_to_company")
+}
+
+model Company {
+  id          Int     @id @default(autoincrement())
+  name        String  @unique @db.VarChar(255)
+  email       String  @unique @db.VarChar(255)
+  picturePath String? @map("picture_path") @db.VarChar(255)
+  latitude    Decimal @db.Decimal(7, 5)
+  longitude   Decimal @db.Decimal(8, 5)
+  userId      Int     @map("user_id")
+  stripeId    String? @map("stripe_id")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  events      Event[]
+  subscribers SubscriptionToCompany[]
+
+  @@map("company")
+}
+
+model Comment {
+  id          Int      @id @default(autoincrement())
+  content     String   @db.Text
+  publishDate DateTime @default(now()) @map("publish_date") @db.Timestamp(1)
+  userId      Int      @map("user_id")
+  eventId     Int      @map("event_id")
+
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  event Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+  @@map("comment")
+}
+
+model Event {
+  id                Int      @id @default(autoincrement())
+  name              String   @unique @db.VarChar(255)
+  description       String   @db.Text
+  date              DateTime @db.Timestamp() //? not sure about type
+  to_date           DateTime @db.Timestamp() //? not sure about type
+  price             Decimal  @db.Decimal(7, 2) // if price == 0 ticket is free
+  latitude          Decimal  @db.Decimal(7, 5)
+  longitude         Decimal  @db.Decimal(8, 5)
+  ticketsAvailable  Int      @map("tickets_available") //? can it be unlimmited
+  picturePath       String?  @map("picture_path") @db.VarChar(255)
+  isNotificationsOn Boolean  @default(false) @map("is_notifications_on") // notify owner about new visitor
+  isPublic          Boolean  @default(true) @map("is_public") // who can see list of visitors everybody or only users who are going to the event
+  publishDate       DateTime @default(now()) @map("publish_date") @db.Timestamp(1)
+  companyId         Int      @map("company_id")
+  formatId          Int      @map("format_id")
+  themeId           Int      @map("theme_id")
+
+  company Company     @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  format  EventFormat @relation(fields: [formatId], references: [id], onDelete: Restrict)
+  theme   EventTheme  @relation(fields: [themeId], references: [id], onDelete: Restrict)
+
+  comments   Comment[]
+  promoCodes PromoCode[]
+  visitors   UserEvent[]
+
+  @@map("event")
+}
+
+model EventFormat {
+  id     Int     @id @default(autoincrement())
+  name   String  @unique @db.VarChar(255)
+  events Event[]
+
+  @@map("event_format")
+}
+
+model EventTheme {
+  id     Int     @id @default(autoincrement())
+  name   String  @unique @db.VarChar(255)
+  events Event[]
+
+  @@map("event_theme")
+}
+
+model PromoCode {
+  id        Int    @id @default(autoincrement())
+  promoCode String @map("promo_code") @db.VarChar(255)
+  discount  Int
+  eventId   Int    @map("event_id")
+  event     Event  @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+  @@map("promo_code")
+}
+
+enum UserRole {
+  user
+  admin
+}

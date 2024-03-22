@@ -1,0 +1,20 @@
+{
+    "version": 2,
+    "builds": [
+      {
+        "src": "./index.ts",
+        "use": "@vercel/node",
+        "config": {
+          "maxLambdaSize": "50mb",
+          "cmd": "npm install && prisma generate && npm run build" 
+        }
+      }
+    ],
+    "routes": [
+      {
+        "src": "dist/server/index.js",
+        "dest": "dist/index.js"
+      }
+    ]
+  }
+  

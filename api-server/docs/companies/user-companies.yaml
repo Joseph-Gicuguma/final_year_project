@@ -1,0 +1,65 @@
+paths:
+  /me/companies/{id}:
+    post:
+      parameters:
+        - name: id
+          in: path
+          schema:
+            type: integer
+          required: true
+          description: The id of the record to query
+      tags:
+        - CompanySubscriptions
+      security:
+        - bearerAuth: []
+      description: Subscribe to a company by its id
+      responses:
+        200:
+          description: Successfully subscribed to the company
+          content:
+            application/json; charset=utf-8:
+              schema:
+                type: object
+                properties:
+                  companyId:
+                    type: integer
+        400:
+          description: The company id is invalid / You've already subscribed to the company
+          content:
+            application/json; charset=utf-8:
+              schema:
+                $ref: '#definitions/error'
+        401:
+          description: Bearer token is invalid
+          content:
+            application/json; charset=utf-8:
+              schema:
+                $ref: '#definitions/error'
+    delete:
+      parameters:
+        - name: id
+          in: path
+          schema:
+            type: integer
+          required: true
+          description: The id of the record to query
+      tags:
+        - CompanySubscriptions
+      security:
+        - bearerAuth: []
+      description: Unsubscribe from a company with the id
+      responses:
+        204:
+          description: Successfully unsubscribed from the company
+        400:
+          description: You weren't subscribed to the company
+          content:
+            application/json; charset=utf-8:
+              schema:
+                $ref: '#definitions/error'
+        401:
+          description: Bearer token is invalid
+          content:
+            application/json; charset=utf-8:
+              schema:
+                $ref: '#definitions/error'

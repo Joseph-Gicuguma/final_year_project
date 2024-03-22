@@ -1,0 +1,229 @@
+paths:
+  /users:
+    get:
+      tags:
+        - Users
+      description: Get all the users
+      parameters:
+        - name: _start
+          in: query
+          schema:
+            type: integer
+          description: The number of the first record for pagination
+        - name: _end
+          in: query
+          schema:
+            type: integer
+          description: The number of the last record for pagination
+        - name: _sort
+          in: query
+          schema:
+            type: string
+          description: The name of the field to sort by
+        - name: _order
+          in: query
+          schema:
+            type: string
+            enum:
+              - ASC
+              - DESC
+          description: The sorting order
+        - name: q
+          in: query
+          schema:
+            type: string
+          description: The string for general search by login / email
+        - name: companyId
+          in: query
+          schema:
+            type: number
+          description: The id of the company the user may be subscribed to
+        - name: eventId
+          in: query
+          schema:
+            type: number
+          description: The id of the event the user may be subscribed to
+      responses:
+        200:
+          description: All registered users found
+          content:
+            application/json; charset=utf-8:
+              schema:
+                $ref: '#definitions/users'
+    post:
+      tags:
+        - Users
+      security:
+        - bearerAuth: []
+      description: Create a user
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#definitions/user_create'
+      responses:
+        201:
+          description: User created
+          content:
+            application/json; charset=utf-8:
+              schema:
+                $ref: '#definitions/user_id'
+        400:
+          description: The format of the user data is invalid
+          content:
+            application/json; charset=utf-8:
+              schema:
+                $ref: '#definitions/error'
+        401:
+          description: Bearer token is invalid
+          content:
+            application/json; charset=utf-8:
+              schema:
+                $ref: '#definitions/error'
+        403:
+          description: You do not have admin rights
+          content:
+            application/json; charset=utf-8:
+              schema:
+                $ref: '#definitions/error'
+  /users/{id}:
+    parameters:
+      - name: id
+        in: path
+        schema:
+          type: integer
+        required: true
+        description: The id of the record to query
+    get:
+      tags:
+        - Users
+      description: Get the user by id
+      responses:
+        200:
+          description: Found the user by id
+          content:
+            application/json; charset=utf-8:
+              schema:
+                $ref: '#definitions/user'
+        404:
+          description: The user was not found by id
+          content:
+            application/json; charset=utf-8:
+              schema:
+                $ref: '#definitions/error'
+    put:
+      tags:
+        - Users
+      security:
+        - bearerAuth: []
+      description: Update the user by id
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#definitions/user_update'
+      responses:
+        200:
+          description: Updated the user by id
+          content:
+            application/json; charset=utf-8:
+              schema:
+                $ref: '#definitions/user_id'
+        404:
+          description: The user was not found by id
+          content:
+            application/json; charset=utf-8:
+              schema:
+                $ref: '#definitions/error'
+        401:
+          description: Bearer token is invalid
+          content:
+            application/json; charset=utf-8:
+              schema:
+                $ref: '#definitions/error'
+        403:
+          description: You do not have admin rights
+          content:
+            application/json; charset=utf-8:
+              schema:
+                $ref: '#definitions/error'
+    delete:
+      tags:
+        - Users
+      security:
+        - bearerAuth: []
+      description: Remove the user by id
+      responses:
+        200:
+          description: Removed the user by id
+          content:
+            application/json; charset=utf-8:
+              schema:
+                $ref: '#definitions/user_id'
+        404:
+          description: The user was not found by id
+          content:
+            application/json; charset=utf-8:
+              schema:
+                $ref: '#definitions/error'
+        401:
+          description: Bearer token is invalid
+          content:
+            application/json; charset=utf-8:
+              schema:
+                $ref: '#definitions/error'
+        403:
+          description: You do not have admin rights
+          content:
+            application/json; charset=utf-8:
+              schema:
+                $ref: '#definitions/error'
+  /users/{id}/avatar:
+    parameters:
+      - name: id
+        in: path
+        schema:
+          type: integer
+        required: true
+        description: The id of the record to query
+    put:
+      tags:
+        - Users
+      security:
+        - bearerAuth: []
+      description: Update the user's avatar
+      parameters:
+        - in: formData
+          name: avatar
+          type: file
+          description: The file to upload.
+      responses:
+        204:
+          description: Updated the user's avatar
+        400:
+          description: The format of the file is invalid
+          content:
+            application/json; charset=utf-8:
+              schema:
+                $ref: '#definitions/error'
+        401:
+          description: Bearer token is invalid
+          content:
+            application/json; charset=utf-8:
+              schema:
+                $ref: '#definitions/error'
+    delete:
+      tags:
+        - Users
+      security:
+        - bearerAuth: []
+      description: Remove the user's avatar
+      responses:
+        204:
+          description: Removed the user's avatar
+        401:
+          description: Bearer token is invalid
+          content:
+            application/json; charset=utf-8:
+              schema:
+                $ref: '#definitions/error'
