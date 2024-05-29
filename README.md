@@ -18,44 +18,9 @@ This project is a comprehensive full stack events management platform designed t
 - **Styling**: Tailwind CSS is used for styling the application, providing a modern and cohesive look.
 
 ### Directory Structure
-**client**: Contains the frontend code for the application.
-**server**: Contains the API code for the application. The API needs to be running for the frontend and admin elements to work.
-**admin**: Contains the admin dashboard code for the application.
+- **client**: Contains the frontend code for the application.
+- **server**: Contains the API code for the application. The API needs to be running for the frontend and admin elements to work.
+- **admin**: Contains the admin dashboard code for the application.
 
-### Getting Started
 
-To get started with the project, follow these steps:
-
-1. **Clone the repository**:
-   ```sh
-   git clone https://github.com/your-username/your-repo-name.git
-   cd your-repo-name
-   ```
-
-2. **Install dependencies**:
-   ```sh
-   npm install
-   ```
-
-3. **Set up environment variables**:
-   Create a `.env` file in the root directory and add the necessary environment variables (e.g., database connection string, JWT secret).
-
-4. **Run the development server**:
-   ```sh
-   npm run dev
-   ```
-
-5. **Access the application**:
-   Open your browser and navigate to `http://localhost:3000` to access the platform.
-
-### Contributing
-
-Contributions are welcome! If you have any ideas, suggestions, or improvements, feel free to create an issue or submit a pull request.
-
-### License
-
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for more details.
-
----
-
-Feel free to customize this description further to match the specifics of your project.
+### BY Joseph Gicuguma Kamau.
