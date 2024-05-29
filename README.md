@@ -17,14 +17,19 @@ This project is a comprehensive full stack events management platform designed t
 - **Authentication**: User authentication and authorization are managed using JWT (JSON Web Tokens) to ensure secure access control.
 - **Styling**: Tailwind CSS is used for styling the application, providing a modern and cohesive look.
 
+### Directory Structure
+**client**: Contains the frontend code for the application.
+**server**: Contains the API code for the application. The API needs to be running for the frontend and admin elements to work.
+**admin**: Contains the admin dashboard code for the application.
+
 ### Getting Started
 
 To get started with the project, follow these steps:
 
 1. **Clone the repository**:
    ```sh
-   git clone https://github.com/yourusername/events-management-platform.git
-   cd events-management-platform
+   git clone https://github.com/your-username/your-repo-name.git
+   cd your-repo-name
    ```
 
 2. **Install dependencies**:
