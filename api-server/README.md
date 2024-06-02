@@ -1,6 +1,6 @@
 <head>
     <div align="center">
-        <h1 align="center">Reservo (Server)</h1>
+        <h1 align="center">API (Server)</h1>
     </div>
 </head>
 
