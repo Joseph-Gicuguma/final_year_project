@@ -4,13 +4,13 @@
   </h1>
 </div>
 
-This project is a comprehensive full stack events management platform designed to streamline the process of organizing and participating in events. It provides robust features for both event organizers and participants, ensuring a seamless and efficient experience.
-
-
 <div align="center">
   <h3>An event-booking application.</h3>
 
 </div>
+
+This project is a comprehensive full stack events management platform designed to streamline the process of organizing and participating in events. It provides robust features for both event organizers and participants, ensuring a seamless and efficient experience.
+
 
 <div align="center">
   <h3> Key Features</h3>
