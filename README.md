@@ -46,8 +46,8 @@ This project is a comprehensive full stack events management platform designed t
 </div>
 
 ### Directory Structure
-- **[Client](client/README.md)**: Contains the frontend code for the application.
-- **[Server](api/README.md)**: Contains the API code for the application. The API needs to be running for the frontend and admin elements to work.
+- **[Client](frontend/README.md)**: Contains the frontend code for the application.
+- **[Server](api-server/README.md)**: Contains the API code for the application. The API needs to be running for the frontend and admin elements to work.
 - **[Admin panel](admin/README.md)**: Contains the admin dashboard code for the application.
 
 ## Entity-relationship diagram
