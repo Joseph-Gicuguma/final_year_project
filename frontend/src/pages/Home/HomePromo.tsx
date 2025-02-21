@@ -1,4 +1,4 @@
-import { Box, Flex, Heading, Text } from '@chakra-ui/layout';
+import { Box, Flex, Heading, Text } from '@chakra-ui/react';
 import Container from '~/components/Container';
 import PromoWavesAnim from '~/components/SvgAnim/PromoWavesAnim';
 

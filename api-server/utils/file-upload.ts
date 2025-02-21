@@ -1,7 +1,7 @@
 import path from 'path';
 import fs from 'fs';
 import { Request } from 'express';
-import multer, { FileFilterCallback } from 'multer';
+import multer, { StorageEngine, FileFilterCallback } from 'multer';
 import { DIR_UPLOADS_NAME } from '../consts/default.js';
 import ClientError from '../types/error.js';
 import logger from '../lib/logger.js';
@@ -12,37 +12,44 @@ type FileNameCallback = (error: Error | null, filename: string) => void;
 const FILE_FORMATS = ['image/png', 'image/jpg', 'image/jpeg'];
 
 const fileFilter = (
-  request: Request,
-  file: Express.Multer.File,
-  callback: FileFilterCallback,
+  req: Request, 
+  file: Express.Multer.File, 
+  callback: FileFilterCallback
 ): void => {
   if (FILE_FORMATS.includes(file.mimetype)) {
     callback(null, true);
   } else {
     const error = new ClientError(
       `The file format should be one of: ${FILE_FORMATS.join(', ')}`,
-      400,
+      400
     );
     callback(error);
   }
 };
 
-const storage = multer.diskStorage({
+// ✅ Fix: Ensure `storage` has correct typings
+const storage: StorageEngine = multer.diskStorage({
   destination: (
-    request: Request,
-    file: Express.Multer.File,
-    callback: DestinationCallback,
+    req: Request, 
+    file: Express.Multer.File, 
+    cb: DestinationCallback
   ): void => {
     const dirPath = path.resolve(DIR_UPLOADS_NAME);
     if (!fs.existsSync(dirPath)) {
-      fs.mkdirSync(dirPath);
+      fs.mkdirSync(dirPath, { recursive: true });
     }
-    callback(null, dirPath);
+    cb(null, dirPath);
   },
 
-  filename: (req: Request, file: Express.Multer.File, callback: FileNameCallback): void => {
-    callback(null, `${Date.now()}-${file.fieldname}-${file.originalname}`);
+  filename: (
+    req: Request, 
+    file: Express.Multer.File, 
+    cb: FileNameCallback
+  ): void => {
+    cb(null, `${Date.now()}-${file.fieldname}-${file.originalname}`);
   },
 });
 
-export default multer({ storage, fileFilter });
+// ✅ Fix: Ensure the export uses the correct types
+const upload = multer({ storage, fileFilter });
+export default upload;

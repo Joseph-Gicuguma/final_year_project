@@ -18,28 +18,53 @@ const createUser = async (req: Request, res: Response) => {
   res.status(201).json({ id });
 };
 
-const getMany = async (req: Request, res: Response) => {
-  const pagination = getPageOptions(req.query);
-  const sort = getSortOptions(req.query, 'login');
-  const { where, isViewAllowed } = await UserService.getWhereOptions(req.query, req.user?.id);
+// const getMany = async (req: Request, res: Response) => {
+//   const pagination = getPageOptions(req.query);
+//   const sort = getSortOptions(req.query, 'login');
+//   const { where, isViewAllowed } = await UserService.getWhereOptions(req.query, req.user?.id);
 
-  if (!isViewAllowed) {
-    return res.header('X-Total-Count', '-1').json(null);
+//   if (!isViewAllowed) {
+//     return res.header('X-Total-Count', '-1').json(null);
+//   }
+
+//   const [users, count] = await prisma.$transaction([
+//     user.findMany({
+//       ...pagination,
+//       ...sort,
+//       where,
+//     }),
+//     user.count({ where }),
+//   ]);
+
+//   const result = users.map(({ password, ...obj }) => obj);
+
+//   res.setHeader('X-Total-Count', count);
+//   res.json(result);
+// };
+const getMany = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const pagination = getPageOptions(req.query);
+    const sort = getSortOptions(req.query, 'login');
+    const { where, isViewAllowed } = await UserService.getWhereOptions(req.query, req.user?.id);
+
+    if (!isViewAllowed) {
+      res.header('X-Total-Count', '-1').json(null);
+      return; // Exit without returning a value
+    }
+
+    const [users, count] = await prisma.$transaction([
+      user.findMany({ ...pagination, ...sort, where }),
+      user.count({ where }),
+    ]);
+
+    const result = users.map(({ password, ...obj }) => obj);
+
+    res.setHeader('X-Total-Count', count);
+    res.json(result); // Send the response and do not return it
+  } catch (error) {
+    const errMessage = error instanceof Error ? error.message : "Unknown error";
+    res.status(500).json({ error: errMessage });
   }
-
-  const [users, count] = await prisma.$transaction([
-    user.findMany({
-      ...pagination,
-      ...sort,
-      where,
-    }),
-    user.count({ where }),
-  ]);
-
-  const result = users.map(({ password, ...obj }) => obj);
-
-  res.setHeader('X-Total-Count', count);
-  res.json(result);
 };
 
 const getUser = async (req: Request, res: Response) => {

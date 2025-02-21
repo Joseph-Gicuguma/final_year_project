@@ -1,4 +1,4 @@
-import { Box, BoxProps } from '@chakra-ui/layout';
+import { Box, BoxProps } from '@chakra-ui/react';
 import styles from './container.styles';
 
 const Container = ({ children, ...restProps }: BoxProps) => {

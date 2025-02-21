@@ -90,7 +90,8 @@ const createSession = async (req: Request, res: Response) => {
       },
     };
     await EventSubscription.handleWith(meta);
-    return res.json({ sessionId: -1 });
+    res.json({ sessionId: -1 });
+    return;
   }
 
   const stripeId = await CompanyService.isStripeConnected(event.companyId);
@@ -113,37 +114,78 @@ const createSession = async (req: Request, res: Response) => {
   const session = await stripe.checkout.sessions.create(params);
 
   res.json({ sessionId: session.id });
-};
+}
 
-const stripeWebhook = async (req: Request, res: Response) => {
-  const sig = req.headers['stripe-signature'] as string | string[];
+// const stripeWebhook = async (req: Request, res: Response) => {
+//   const sig = req.headers['stripe-signature'] as string | string[];
 
-  let event: Stripe.Event;
+//   let event: Stripe.Event;
 
+//   try {
+//     event = stripe.webhooks.constructEvent(req.body, sig, STRIPE_WEBHOOK_KEY);
+//   } catch (err) {
+//     throw new Error(`Stripe webhook error: ${err}`);
+//   }
+
+//   if (event.type === 'payment_intent.succeeded') {
+//     const meta = event.data.object as IEventMeta;
+//     await EventSubscription.handleWith(meta);
+//     logger.info('Your payment was successful');
+//   }
+
+//   if (event.type === 'account.updated') {
+//     if (!event.account) {
+//       return res.sendStatus(500);
+//     }
+//     const account = await stripe.accounts.retrieve(event.account);
+//     if (!account.details_submitted) {
+//       logger.error('Not all account information has been completed yet.');
+//       return res.sendStatus(500);
+//     }
+//   }
+
+//   res.sendStatus(200);
+// };
+
+const stripeWebhook = async (req: Request, res: Response): Promise<void> => {
   try {
-    event = stripe.webhooks.constructEvent(req.body, sig, STRIPE_WEBHOOK_KEY);
-  } catch (err) {
-    throw new Error(`Stripe webhook error: ${err}`);
-  }
+    const sig = req.headers['stripe-signature'] as string | string[];
 
-  if (event.type === 'payment_intent.succeeded') {
-    const meta = event.data.object as IEventMeta;
-    await EventSubscription.handleWith(meta);
-    logger.info('Your payment was successful');
-  }
-
-  if (event.type === 'account.updated') {
-    if (!event.account) {
-      return res.sendStatus(500);
+    let event: Stripe.Event;
+    try {
+      event = stripe.webhooks.constructEvent(req.body, sig, STRIPE_WEBHOOK_KEY);
+    } catch (err) {
+      res.status(400).json({ error: `Stripe webhook error: ${err}` });
+      return;
     }
-    const account = await stripe.accounts.retrieve(event.account);
-    if (!account.details_submitted) {
-      logger.error('Not all account information has been completed yet.');
-      return res.sendStatus(500);
+
+    if (event.type === 'payment_intent.succeeded') {
+      const meta = event.data.object as IEventMeta;
+      await EventSubscription.handleWith(meta);
+      logger.info('Your payment was successful');
+    }
+
+    if (event.type === 'account.updated') {
+      if (!event.account) {
+        res.sendStatus(500);
+        return;
+      }
+      const account = await stripe.accounts.retrieve(event.account);
+      if (!account.details_submitted) {
+        logger.error('Not all account information has been completed yet.');
+        res.sendStatus(500);
+        return;
+      }
+    }
+
+    res.sendStatus(200);
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      res.status(500).json({ error: error.message });
+    } else {
+      res.status(500).json({ error: 'An unknown error occurred' });
     }
   }
-
-  res.sendStatus(200);
 };
 
 export { createAccount, getAccountLink, createSession, stripeWebhook };
