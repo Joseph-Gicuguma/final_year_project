@@ -73,7 +73,9 @@ const login = async (req: Request, res: Response) => {
 const refresh = async (req: Request, res: Response) => {
   const { refreshToken: token } = req.cookies;
 
+  console.log("Received refresh token:", token);
   const data = Token.validate(token);
+  console.log("Decoded token data:", data);
   if (!data || typeof data === 'string' || !data.id) {
     throw new ClientError('The refresh token is invalid.', 403);
   }
