@@ -72,8 +72,8 @@ const Header = () => {
         </Box>
         <Box>
           <ReactRouterLink to="/">
-            {/* <Image src="/assets/reservo_1.png" alt="Reservo Logo" maxHeight="100px" maxWidth="6j00px"/> */}
-            <text>Anza Village</text>
+            <Image src="/assets/reservo_1.png" alt="Reservo Logo" maxHeight="100px" maxWidth="6j00px"/>
+            {/* <text>R</text> */}
           </ReactRouterLink>
         </Box>
         <HStack align="center" spacing={6}>

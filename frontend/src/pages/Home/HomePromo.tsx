@@ -22,10 +22,10 @@ const HomePromo = () => {
               fontSize={{ base: '28px', sm: '30px', lg: '36px' }}
               mb={{ base: '10px', sm: '0' }}
             >
-              Anza Village 
+              Coming Soon!
             </Heading>
             <Text fontSize={{ base: '16px', sm: '18px', lg: '20px' }}>
-            Welcome to the Anza Village. We are a community of founders.
+            Join us for a seamless ticketing experience.
             </Text>
           </Flex>
           <PromoWavesAnim width="100%" />
