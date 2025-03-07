@@ -12,6 +12,8 @@ export default defineConfig({
     },
   },
   server: {
-    port: 6600,
+    // port: 6600,
+    port: process.env.PORT ? parseInt(process.env.PORT) : 6600,
+    host: '0.0.0.0'
   },
 });
