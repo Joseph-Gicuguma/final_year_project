@@ -15,6 +15,8 @@ export const apiSlice = createApi({
     'CompanySubscribers',
     'EventSubscribers',
     'PromoCode',
+    'Alika',
+    'AlikaInvitation'
   ],
   endpoints: (_builder) => ({}),
 });

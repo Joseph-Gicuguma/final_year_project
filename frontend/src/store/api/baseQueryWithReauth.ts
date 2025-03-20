@@ -4,7 +4,7 @@ import { logout, setToken } from '../profileSlice';
 import type { RootState } from '../store';
 
 const baseQuery = fetchBaseQuery({
-  baseUrl: import.meta.env.VITE_API_URL,
+  // No baseUrl - this allows the URLs defined in the slices to work with the proxy
   prepareHeaders: (headers, { getState }) => {
     const token = (getState() as RootState).profile.accessToken;
     if (token) {
@@ -25,7 +25,7 @@ const baseQueryWithReauth: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQue
   if (result.error && result.error.status === 401) {
     const refreshResult = await baseQuery(
       {
-        url: 'auth/refresh',
+        url: '/api/auth/refresh',
         method: 'POST',
       },
       api,

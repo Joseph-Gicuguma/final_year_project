@@ -31,7 +31,7 @@ const initializeApp = () => {
     }),
   );
 
-  app.use(router);
+  app.use('/api', router);
 
   app.use(errorMiddleware);
 

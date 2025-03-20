@@ -4,26 +4,31 @@ import type { ICreate, IUpdate } from '~/validation/companies';
 
 export const extendedApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
-    getCompanies: builder.query<CompaniesResponse, CompaniesParam>({
-      query: (queryParams) => ({
-        url: `/companies`,
-        params: { ...queryParams },
-      }),
-      transformResponse(companies: Company[], meta: any) {
-        return { companies, totalCount: Number(meta.response.headers.get('X-Total-Count')) };
+    getCompanies: builder.query({
+      query: ({ page, limit, orderDirection, byField }) => {
+        const params = new URLSearchParams();
+        page && params.append('page', page);
+        limit && params.append('limit', limit);
+        orderDirection && params.append('orderDirection', orderDirection);
+        byField && params.append('byField', byField);
+        
+        return {
+          url: '/api/companies',
+          params
+        };
       },
-      providesTags: (result) => {
-        const companies = result?.companies || [];
-        return ['Company', ...companies.map(({ id }) => ({ type: 'Company' as const, id }))];
-      },
+      providesTags: (result) =>
+        result
+          ? [...result.data.map(({ id }) => ({ type: 'Company', id })), { type: 'Company', id: 'LIST' }]
+          : [{ type: 'Company', id: 'LIST' }],
     }),
     getCompany: builder.query<Company, number>({
-      query: (id) => `/companies/${id}`,
+      query: (id) => `/api/companies/${id}`,
       providesTags: (_result, _error, arg) => [{ type: 'Company' as const, id: arg }],
     }),
     createCompany: builder.mutation<Company, ICreate>({
       query: (body) => ({
-        url: '/companies',
+        url: '/api/companies',
         method: 'POST',
         body,
       }),
@@ -31,19 +36,19 @@ export const extendedApiSlice = apiSlice.injectEndpoints({
     }),
     createStripeAccount: builder.mutation<StripeLink, { id: number }>({
       query: ({ id }) => ({
-        url: `/companies/${id}/stripe-account`,
+        url: `/api/companies/${id}/stripe-account`,
         method: 'POST',
       }),
     }),
     getStripeAccount: builder.query<StripeLink, { id: number }>({
       query: ({ id }) => ({
-        url: `/companies/${id}/stripe-account`,
+        url: `/api/companies/${id}/stripe-account`,
         method: 'GET',
       }),
     }),
     updateCompany: builder.mutation<Company, IUpdate & Pick<Company, 'id'>>({
       query: ({ id, ...body }) => ({
-        url: `/companies/${id}`,
+        url: `/api/companies/${id}`,
         method: 'PUT',
         body,
       }),
@@ -51,14 +56,14 @@ export const extendedApiSlice = apiSlice.injectEndpoints({
     }),
     deleteCompany: builder.mutation<void, number>({
       query: (id) => ({
-        url: `/companies/${id}`,
+        url: `/api/companies/${id}`,
         method: 'DELETE',
       }),
       invalidatesTags: ['Company'],
     }),
     updateCompanyAvatar: builder.mutation<Company, { form: FormData } & Pick<Company, 'id'>>({
       query: ({ id, form }) => ({
-        url: `/companies/${id}/avatar`,
+        url: `/api/companies/${id}/avatar`,
         method: 'PUT',
         body: form,
       }),
@@ -66,21 +71,21 @@ export const extendedApiSlice = apiSlice.injectEndpoints({
     }),
     deleteCompanyAvatar: builder.mutation<void, number>({
       query: (id) => ({
-        url: `/companies/${id}/avatar`,
+        url: `/api/companies/${id}/avatar`,
         method: 'DELETE',
       }),
       invalidatesTags: (_result, _error, arg) => [{ type: 'Company', id: arg }],
     }),
     subscribe: builder.mutation<SubscriptionResponse, number>({
       query: (id) => ({
-        url: `/me/companies/${id}`,
+        url: `/api/me/companies/${id}`,
         method: 'POST',
       }),
       invalidatesTags: (_result, _err, arg) => [{ type: 'CompanySubscribers', id: arg }],
     }),
     unsubscribe: builder.mutation<void, number>({
       query: (id) => ({
-        url: `/me/companies/${id}`,
+        url: `/api/me/companies/${id}`,
         method: 'DELETE',
       }),
       invalidatesTags: (_result, _err, arg) => [{ type: 'CompanySubscribers', id: arg }],

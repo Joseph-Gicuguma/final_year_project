@@ -4,7 +4,7 @@ import { Input, FormControl, FormLabel, FormErrorMessage, Box } from '@chakra-ui
 import Geocode from '~/consts/geocode';
 import { UseFormRegister, UseFormSetValue, FieldErrors } from 'react-hook-form';
 
-const libraries: ('places' | 'drawing' | 'geometry' | 'localContext' | 'visualization')[] = ['places'];
+const libraries: ("places" | "drawing" | "geometry" | "visualization")[] = ["places", "drawing", "geometry", "visualization"];
 
 type IProps = {
   lat?: number;

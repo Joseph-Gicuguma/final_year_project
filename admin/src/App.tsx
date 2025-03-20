@@ -8,6 +8,7 @@ import { formats, themes } from './components/formats-themes/index.js';
 import comments from './components/comments/index.js';
 import users from './components/users/index.js';
 import promoCodes from './components/promo-codes/index.js';
+import alika from './components/alika/index.js';
 
 const App = () => (
   <Admin dataProvider={dataProvider} authProvider={authProvider} requireAuth>
@@ -18,6 +19,7 @@ const App = () => (
     <Resource name="comments" {...comments} />
     <Resource name="users" {...users} />
     <Resource name="promo-codes" options={{ label: 'Promo Codes' }} {...promoCodes} />
+    <Resource name="alika-events" options={{ label: 'Alika Events' }} {...alika} />
   </Admin>
 );
 

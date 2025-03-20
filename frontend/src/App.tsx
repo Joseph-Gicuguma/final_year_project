@@ -14,6 +14,10 @@ import SuccessfulPayment from './pages/Payment/Success';
 import CompaniesRoutes from './routes/Companies';
 import EventRoutes from './routes/Events';
 import ProfileRoutes from './routes/Profile';
+import CreateEventForm from './components/alika/CreateEventForm';
+import AlikaEventList from '~/components/alika/AlikaEventList';
+import EventDetail from '~/components/alika/EventDetail';
+import InvitationResponse from '~/components/alika/InvitationResponse';
 
 function App() {
   return (
@@ -36,6 +40,12 @@ function App() {
         </Route>
         <Route path="/payment/success" element={<SuccessfulPayment />}></Route>
         <Route path="/payment/cancel" element={<CancelledPayment />}></Route>
+        <Route element={<ProtectedRoute />}>
+          <Route path="/alika" element={<AlikaEventList />} />
+          <Route path="/alika/create" element={<CreateEventForm />} />
+          <Route path="/alika/:id" element={<EventDetail />} />
+        </Route>
+        <Route path="/invitation/:id" element={<InvitationResponse />} />
         <Route path="/*" element={<NotFound />} />
       </Route>
     </Routes>

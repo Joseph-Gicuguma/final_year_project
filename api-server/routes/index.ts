@@ -9,6 +9,7 @@ import formats from './formats.js';
 import themes from './themes.js';
 import profile from './profile.js';
 import userCompanies from './user-companies.js';
+import alika from './alika.js';
 
 const router = express.Router();
 
@@ -22,5 +23,6 @@ router.use('/formats', formats);
 router.use('/themes', themes);
 router.use('/me/companies', userCompanies);
 router.use('/me/profile', profile);
+router.use('/alika', alika);
 
 export default router;

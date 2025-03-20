@@ -6,7 +6,7 @@ import { apiSlice } from './api-slice';
 export const profileSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getProfile: builder.query<User, void>({
-      query: () => '/me/profile',
+      query: () => '/api/me/profile',
       async onQueryStarted(_args, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
@@ -17,7 +17,7 @@ export const profileSlice = apiSlice.injectEndpoints({
     }),
     updateProfile: builder.mutation<void, IUpdate>({
       query: ({ login, email, fullName }) => ({
-        url: 'me/profile',
+        url: '/api/me/profile',
         method: 'PUT',
         body: { login, email, fullName },
       }),
@@ -31,7 +31,7 @@ export const profileSlice = apiSlice.injectEndpoints({
     }),
     deleteProfile: builder.mutation({
       query: () => ({
-        url: 'me/profile',
+        url: '/api/me/profile',
         method: 'DELETE',
       }),
       async onQueryStarted(_args, { dispatch, queryFulfilled }) {
@@ -44,7 +44,7 @@ export const profileSlice = apiSlice.injectEndpoints({
     }),
     updateAvatar: builder.mutation<IAvatarUpdate, FormData>({
       query: (form) => ({
-        url: 'me/profile/avatar',
+        url: '/api/me/profile/avatar',
         method: 'PUT',
         body: form,
       }),
@@ -57,7 +57,7 @@ export const profileSlice = apiSlice.injectEndpoints({
     }),
     deleteAvatar: builder.mutation({
       query: () => ({
-        url: 'me/profile/avatar',
+        url: '/api/me/profile/avatar',
         method: 'DELETE',
       }),
       async onQueryStarted(_body, { dispatch, queryFulfilled }) {

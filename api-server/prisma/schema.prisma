@@ -21,6 +21,7 @@ model User {
   comments      Comment[]
   events        UserEvent[]
   subscriptions SubscriptionToCompany[]
+  alikaEvents   AlikaEvent[]
 
   @@map("user")
 }
@@ -132,6 +133,64 @@ model PromoCode {
   event     Event  @relation(fields: [eventId], references: [id], onDelete: Cascade)
 
   @@map("promo_code")
+}
+
+model AlikaEvent {
+  id          Int      @id @default(autoincrement())
+  title       String   @db.VarChar(255)
+  description String   @db.Text
+  date        DateTime @db.Timestamp()
+  time        String   @db.VarChar(10)
+  location    String   @db.VarChar(255)
+  hostId      Int      @map("host_id")
+  createdAt   DateTime @default(now()) @map("created_at") @db.Timestamp(1)
+  updatedAt   DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamp(1)
+  isActive    Boolean  @default(true) @map("is_active")
+
+  host        User               @relation(fields: [hostId], references: [id], onDelete: Cascade)
+  invitations AlikaInvitation[]
+  mediaLinks  AlikaMedia[]
+
+  @@map("alika_event")
+}
+
+model AlikaInvitation {
+  id         Int           @id @default(autoincrement())
+  eventId    Int           @map("event_id")
+  guestEmail String        @db.VarChar(255)
+  guestName  String        @db.VarChar(255)
+  status     InviteStatus  @default(pending)
+  createdAt  DateTime      @default(now()) @map("created_at") @db.Timestamp(1)
+  updatedAt  DateTime      @default(now()) @updatedAt @map("updated_at") @db.Timestamp(1)
+
+  event      AlikaEvent    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+  @@map("alika_invitation")
+}
+
+model AlikaMedia {
+  id        Int      @id @default(autoincrement())
+  eventId   Int      @map("event_id")
+  type      MediaType
+  url       String   @db.VarChar(512)
+  title     String   @db.VarChar(255)
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamp(1)
+
+  event     AlikaEvent @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+  @@map("alika_media")
+}
+
+enum InviteStatus {
+  pending
+  accepted
+  declined
+  maybe
+}
+
+enum MediaType {
+  google_photos
+  spotify
 }
 
 enum UserRole {

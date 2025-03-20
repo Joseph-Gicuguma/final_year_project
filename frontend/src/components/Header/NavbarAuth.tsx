@@ -44,6 +44,12 @@ const NavbarAuth = () => {
               <MenuItem color="secondary" px={4} py={2} onClick={() => navigate('/profile/tickets')}>
                 My tickets
               </MenuItem>
+              <MenuItem color="secondary" px={4} py={2} onClick={() => navigate('/alika')}>
+                My Gatherings
+              </MenuItem>
+              <MenuItem color="secondary" px={4} py={2} onClick={() => navigate('/alika/create')}>
+                Create Gathering
+              </MenuItem>
             </MenuGroup>
             <MenuDivider />
             <MenuGroup title="Account">
